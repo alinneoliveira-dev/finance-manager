@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Financeiro</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <span class="logo-icon">◂</span>
+    <span class="logo-text">Finance</span>
+  </div>
+
+  <nav class="menu">
+    <p class="menu-label">MENU</p>
+    <button class="menu-item active" data-view="dashboard">
+       Dashboard
+    </button>
+    <button class="menu-item" data-view="categorias">
+       Categorias
+    </button>
+
+   <!-- futuro etl aqui
+     <p class="menu-label">VISÃO GERAL</p>
+    <button class="menu-item disabled" disabled>
+      <span class="icon">↗</span> Relatórios <span class="badge-soon">Em breve</span>
+    </button>
+  </nav>-->
+
+  <div class="sidebar-footer">
+    <button class="menu-item">
+      <span class="icon">⚙</span> Configurações
+    </button>
+    <div class="user-row">
+      <span class="avatar">N</span>
+      <span>Recolher</span>
+    </div>
+  </div>
+</aside>
+
+<main class="content">
+
+  <header class="page-header">
+    <div>
+      <h1>Dashboard Financeiro</h1>
+      <p class="subtitle" id="periodo-atual">Carregando período…</p>
+    </div>
+  </header>
+
+  <section class="cards-row">
+    <div class="card card-saldo">
+      <p class="card-label">SALDO ATUAL</p>
+      <h2 id="saldo-atual">R$ 0,00</h2>
+    </div>
+
+    <div class="card card-entradas">
+      <p class="card-label label-verde">TOTAL DE ENTRADAS</p>
+      <h2 class="valor-verde" id="total-entradas">R$ 0,00</h2>
+    </div>
+
+    <div class="card card-saidas">
+      <p class="card-label label-vermelho">TOTAL DE SAÍDAS</p>
+      <h2 class="valor-vermelho" id="total-saidas">R$ 0,00</h2>
+    </div>
+  </section>
+
+  <section class="main-grid">
+
+    <div class="panel form-panel">
+      <h3>Nova Transação</h3>
+
+      <form id="form-transacao">
+        <div class="tipo-toggle">
+          <button type="button" class="tipo-btn tipo-entrada active" data-tipo="entrada">↑ Entrada</button>
+          <button type="button" class="tipo-btn tipo-saida" data-tipo="saida">↓ Saída</button>
+        </div>
+
+        <label>Descrição</label>
+        <input type="text" id="descricao" placeholder="Ex: Supermercado, Salário…" required>
+
+        <label>Valor (R$)</label>
+        <input type="number" id="valor" placeholder="0,00" step="0.01" min="0.01" required>
+
+        <label>Categoria</label>
+        <select id="categoria" required>
+          <option value="">Selecionar categoria…</option>
+        </select>
+
+        <label>Data</label>
+        <input type="date" id="data-transacao" required>
+
+        <button type="submit" class="btn-salvar">Salvar transação</button>
+        <p class="form-erro" id="form-erro"></p>
+      </form>
+    </div>
+
+    <div class="panel transacoes-panel">
+      <div class="transacoes-header">
+        <h3>Transações <span class="badge-total" id="total-transacoes">0</span></h3>
+        <div class="filtros">
+          <input type="text" id="busca" placeholder="Buscar...">
+          <select id="filtro-tipo">
+            <option value="">Todos os tipos</option>
+            <option value="entrada">Entradas</option>
+            <option value="saida">Saídas</option>
+          </select>
+          <select id="filtro-categoria">
+            <option value="">Todas as categorias</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="transacoes-lista" id="lista-transacoes">
+        <p class="lista-vazia">Carregando transações…</p>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -23,10 +23,8 @@ body {
   min-height: 100vh;
 }
 
-/* ---------- SIDEBAR ---------- */
-
 .sidebar {
-  width: 260px;
+  width: 320px;
   background: var(--azul-escuro);
   color: #DBEAFE;
   padding: 24px 20px;
@@ -38,7 +36,7 @@ body {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #fff;
   font-weight: 700;
   font-size: 18px;
@@ -66,7 +64,7 @@ body {
   color: #DBEAFE;
   padding: 11px 12px;
   border-radius: 10px;
-  font-size: 14.5px;
+  font-size: 17px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -114,7 +112,7 @@ body {
   font-size: 13px;
 }
 
-/* ---------- MAIN ---------- */
+/*main*/
 
 .content {
   flex: 1;
@@ -129,7 +127,7 @@ body {
   margin-bottom: 24px;
 }
 
-.page-header h1 { font-size: 26px; font-weight: 800; }
+.page-header h1 { font-size: 30px; font-weight: 800; }
 .subtitle { color: var(--texto-secundario); margin-top: 4px; font-size: 14px; }
 
 .live-pill {
@@ -141,7 +139,7 @@ body {
   border-radius: 999px;
 }
 
-/* ---------- CARDS ---------- */
+/*cards*/
 
 .cards-row {
   display: grid;
@@ -152,7 +150,7 @@ body {
 
 .card {
   border-radius: var(--raio);
-  padding: 22px 24px;
+  padding: 55px 12px;
   position: relative;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
@@ -180,7 +178,7 @@ body {
 .card-saidas .card-icon { background: var(--vermelho-bg); }
 
 .card-label {
-  font-size: 12.5px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #BFDBFE;
@@ -189,14 +187,14 @@ body {
 .label-verde { color: var(--verde); }
 .label-vermelho { color: var(--vermelho); }
 
-.card h2 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+.card h2 { font-size: 35px; font-weight: 800; margin-bottom: 6px; }
 .valor-verde { color: var(--verde); }
 .valor-vermelho { color: var(--vermelho); }
 
 .card-caption { font-size: 13px; color: rgba(255,255,255,0.75); }
 .card-entradas .card-caption, .card-saidas .card-caption { color: var(--texto-secundario); }
 
-/* ---------- GRID PRINCIPAL ---------- */
+/*grid principal*/
 
 .main-grid {
   display: grid;
@@ -222,7 +220,7 @@ body {
 
 .plus-icon { color: var(--azul-medio); }
 
-/* Formulário */
+/*form*/
 
 .tipo-toggle {
   display: flex;
@@ -276,7 +274,7 @@ body {
 
 .form-erro { color: var(--vermelho); font-size: 13px; margin-top: 10px; min-height: 16px; }
 
-/* Transações */
+/*transações*/
 
 .transacoes-header {
   display: flex;
@@ -348,7 +346,20 @@ body {
 
 .lista-vazia { color: var(--texto-secundario); font-size: 14px; padding: 30px 0; text-align: center; }
 
-/* Responsivo */
+.btn-excluir {
+  background: none;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  color: var(--vermelho);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.btn-excluir:hover { background: var(--vermelho-bg); border-color: var(--vermelho); }
+
+
+/*responsivo*/
 
 @media (max-width: 960px) {
   body { flex-direction: column; }

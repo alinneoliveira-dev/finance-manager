@@ -1,4 +1,4 @@
-const API_BASE = '';  // vazio: front e API estão na mesma origem agora (mesma porta do Flask)
+const API_BASE = '';  
 
 let tipoSelecionado = 'entrada';
 
@@ -20,7 +20,7 @@ function definirPeriodoAtual() {
     `${meses[hoje.getMonth()]} de ${hoje.getFullYear()} — Atualizações em tempo real`;
 }
 
-// ---------- DASHBOARD ----------
+//dashboard
 
 async function carregarDashboard() {
   const res = await fetch(`${API_BASE}/api/dashboard`);
@@ -31,7 +31,7 @@ async function carregarDashboard() {
   document.getElementById('total-saidas').textContent = formatarMoeda(data.total_saidas);
 }
 
-// ---------- CATEGORIAS ----------
+//categorias
 
 async function carregarCategoriasForm(tipo) {
   const res = await fetch(`${API_BASE}/api/categorias?tipo=${tipo}`);
@@ -61,7 +61,7 @@ async function carregarCategoriasFiltro() {
   });
 }
 
-// ---------- TRANSAÇÕES ----------
+//transações 
 
 function corComOpacidade(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -115,7 +115,7 @@ async function carregarTransacoes() {
   renderizarTransacoes(data.transacoes);
 }
 
-// ---------- FORMULÁRIO NOVA TRANSAÇÃO ----------
+//form novas transações
 
 function configurarToggleTipo() {
   const botoes = document.querySelectorAll('.tipo-btn');
@@ -160,7 +160,102 @@ async function salvarTransacao(evento) {
   await Promise.all([carregarDashboard(), carregarTransacoes()]);
 }
 
-// ---------- INICIALIZAÇÃO ----------
+
+function configurarTrocaDeView() {
+  document.querySelectorAll('.menu-item[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.menu-item[data-view]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const view = btn.dataset.view;
+      document.getElementById('view-dashboard').style.display = view === 'dashboard' ? '' : 'none';
+      document.getElementById('view-categorias').style.display = view === 'categorias' ? '' : 'none';
+
+      if (view === 'categorias') carregarListaCategorias();
+    });
+  });
+}
+
+//crud 
+
+let tipoCategoriaSelecionado = 'entrada';
+
+async function carregarListaCategorias() {
+  const res = await fetch(`${API_BASE}/api/categorias`);
+  const categorias = await res.json();
+
+  document.getElementById('total-categorias').textContent = categorias.length;
+  const lista = document.getElementById('lista-categorias');
+
+  if (categorias.length === 0) {
+    lista.innerHTML = '<p class="lista-vazia">Nenhuma categoria cadastrada.</p>';
+    return;
+  }
+
+  lista.innerHTML = categorias.map(cat => `
+    <div class="transacao-row">
+      <div class="tx-icone" style="background:${corComOpacidade(cat.cor, 0.15)}; color:${cat.cor}">●</div>
+      <div class="tx-info">
+        <div class="tx-desc">${cat.nome}</div>
+        <div class="tx-meta"><span class="tx-data">${cat.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span></div>
+      </div>
+      <button type="button" class="btn-excluir" data-id="${cat.id}">Excluir</button>
+    </div>
+  `).join('');
+
+  lista.querySelectorAll('.btn-excluir').forEach(btn => {
+    btn.addEventListener('click', () => excluirCategoria(btn.dataset.id));
+  });
+}
+
+async function excluirCategoria(id) {
+  const res = await fetch(`${API_BASE}/api/categorias/${id}`, { method: 'DELETE' });
+
+  if (!res.ok) {
+    const erro = await res.json();
+    alert(erro.erro || 'Não foi possível excluir essa categoria.');
+    return;
+  }
+
+  carregarListaCategorias();
+}
+
+function configurarFormCategoria() {
+  document.querySelectorAll('[data-tipo-cat]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-tipo-cat]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tipoCategoriaSelecionado = btn.dataset.tipoCat;
+    });
+  });
+
+  document.getElementById('form-categoria').addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    const erroEl = document.getElementById('form-erro-categoria');
+    erroEl.textContent = '';
+
+    const payload = {
+      nome: document.getElementById('nome-categoria').value.trim(),
+      tipo: tipoCategoriaSelecionado,
+      cor: document.getElementById('cor-categoria').value
+    };
+
+    const res = await fetch(`${API_BASE}/api/categorias`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const erro = await res.json();
+      erroEl.textContent = erro.erro || 'Não foi possível salvar a categoria.';
+      return;
+    }
+
+    document.getElementById('form-categoria').reset();
+    carregarListaCategorias();
+  });
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   definirPeriodoAtual();
@@ -173,10 +268,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('filtro-tipo').addEventListener('change', carregarTransacoes);
   document.getElementById('filtro-categoria').addEventListener('change', carregarTransacoes);
 
+  configurarTrocaDeView();
+  configurarFormCategoria();
+
   await Promise.all([
     carregarDashboard(),
     carregarCategoriasForm(tipoSelecionado),
     carregarCategoriasFiltro(),
     carregarTransacoes()
   ]);
+
+  setInterval(() => {
+    carregarDashboard();
+    carregarTransacoes();
+  }, 15000);
 });

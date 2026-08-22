@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from mysql.connector.errors import IntegrityError
 
 from db import get_connection
 
@@ -53,9 +54,20 @@ def criar_categoria():
 def deletar_categoria(categoria_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM categorias WHERE id = %s", (categoria_id,))
-    conn.commit()
-    afetadas = cursor.rowcount
+
+    try:
+        cursor.execute("DELETE FROM categorias WHERE id = %s", (categoria_id,))
+        conn.commit()
+        afetadas = cursor.rowcount
+    except IntegrityError:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "erro": "Essa categoria tem transações vinculadas e não pode ser excluída. "
+                    "Exclua ou reatribua as transações dela antes de remover a categoria."
+        }), 409
+
     cursor.close()
     conn.close()
 

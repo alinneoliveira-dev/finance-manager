@@ -23,6 +23,10 @@
       <img src="static/images/categorias.png" alt="categorias">
        Categorias
     </button>
+    <button class="menu-item" data-view="limites">
+            <img src="static/images/limite.png" alt="limite">
+       Limites
+    </button>
 
    <!-- futuro etl aqui
      <p class="menu-label">VISÃO GERAL</p>
@@ -45,7 +49,6 @@
 
 <main class="content">
 
-  <!-- ===== VIEW: DASHBOARD ===== -->
   <div id="view-dashboard">
 
     <header class="page-header">
@@ -133,7 +136,6 @@
 
   </div>
 
-  <!-- ===== VIEW: CATEGORIAS ===== -->
   <div id="view-categorias" class="main-grid" style="display:none">
 
     <div class="panel form-panel">
@@ -159,6 +161,33 @@
       <h3>Categorias <span class="badge-total" id="total-categorias">0</span></h3>
       <div class="transacoes-lista" id="lista-categorias">
         <p class="lista-vazia">Carregando categorias…</p>
+      </div>
+    </div>
+
+  </div>
+
+   <div id="view-limites" class="main-grid" style="display:none">
+
+    <div class="panel form-panel">
+      <h3>Definir Limite</h3>
+      <form id="form-limite">
+        <label>Categoria</label>
+        <select id="categoria-limite" required>
+          <option value="">Selecionar categoria…</option>
+        </select>
+
+        <label>Limite mensal (R$)</label>
+        <input type="number" id="valor-limite" placeholder="0,00" step="0.01" min="0.01" required>
+
+        <button type="submit" class="btn-salvar">Salvar limite</button>
+        <p class="form-erro" id="form-erro-limite"></p>
+      </form>
+    </div>
+
+    <div class="panel transacoes-panel">
+      <h3>Limites por Categoria</h3>
+      <div class="transacoes-lista" id="lista-limites">
+        <p class="lista-vazia">Carregando limites…</p>
       </div>
     </div>
 

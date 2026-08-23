@@ -358,6 +358,37 @@ body {
 }
 .btn-excluir:hover { background: var(--vermelho-bg); border-color: var(--vermelho); }
 
+.limite-row {
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--borda);
+}
+.limite-row:last-child { border-bottom: none; }
+
+.limite-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.limite-valores { font-size: 13.5px; color: var(--texto-secundario); font-weight: 600; }
+
+.barra-fundo {
+  width: 100%;
+  height: 8px;
+  background: var(--azul-fundo);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barra-preenchida { height: 100%; border-radius: 999px; }
+.barra-ok { background: var(--verde); }
+.barra-alerta { background: #F59E0B; }
+.barra-estourada { background: var(--vermelho); }
+
+.limite-percentual { font-size: 12.5px; color: var(--texto-secundario); margin-top: 6px; }
+.limite-sem-valor { font-size: 13px; color: var(--texto-secundario); font-style: italic; }
+
 
 /*responsivo*/
 

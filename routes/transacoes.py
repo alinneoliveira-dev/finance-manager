@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from db import get_connection
+from db import get_cursor
 
 transacoes_bp = Blueprint('transacoes', __name__)
 
@@ -21,25 +21,22 @@ def listar_transacoes():
     params = []
 
     if tipo:
-        query += " AND tra.tipo = %s"
+        query += " AND t.tipo = %s"
         params.append(tipo)
 
     if categoria_id:
-        query += " AND tra.categoria_id = %s"
+        query += " AND t.categoria_id = %s"
         params.append(categoria_id)
 
     if busca:
-        query += " AND tra.descricao LIKE %s"
+        query += " AND t.descricao LIKE %s"
         params.append(f"%{busca}%")
 
     query += " ORDER BY tra.data_transacao DESC, tra.id DESC"
 
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(query, params)
-    transacoes = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    with get_cursor(dictionary=True) as cursor:
+        cursor.execute(query, params)
+        transacoes = cursor.fetchall()
 
     for t in transacoes:
         t['valor'] = float(t['valor'])
@@ -63,29 +60,21 @@ def criar_transacao():
             "erro": "Campos obrigatórios: descricao, valor, tipo (entrada/saida), data_transacao"
         }), 400
 
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO transacoes (descricao, valor, tipo, categoria_id, data_transacao)
-        VALUES (%s, %s, %s, %s, %s)
-    """, (descricao, valor, tipo, categoria_id, data_transacao))
-    conn.commit()
-    nova_id = cursor.lastrowid
-    cursor.close()
-    conn.close()
+    with get_cursor(commit=True) as cursor:
+        cursor.execute("""
+            INSERT INTO transacoes (descricao, valor, tipo, categoria_id, data_transacao)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (descricao, valor, tipo, categoria_id, data_transacao))
+        nova_id = cursor.lastrowid
 
     return jsonify({"id": nova_id, "mensagem": "Transação registrada com sucesso"}), 201
 
 
 @transacoes_bp.route('/api/transacoes/<int:transacao_id>', methods=['DELETE'])
 def deletar_transacao(transacao_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM transacoes WHERE id = %s", (transacao_id,))
-    conn.commit()
-    afetadas = cursor.rowcount
-    cursor.close()
-    conn.close()
+    with get_cursor(commit=True) as cursor:
+        cursor.execute("DELETE FROM transacoes WHERE id = %s", (transacao_id,))
+        afetadas = cursor.rowcount
 
     if afetadas == 0:
         return jsonify({"erro": "Transação não encontrada"}), 404

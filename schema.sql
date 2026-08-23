@@ -1,7 +1,7 @@
 CREATE DATABASE expense_control;
 USE expense_control;
 
-CREATE TABLE  categorias (
+CREATE TABLE IF NOT EXISTS categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     tipo ENUM('entrada','saida') NOT NULL,
@@ -21,9 +21,8 @@ CREATE TABLE transacoes (
 
 CREATE TABLE limites_categoria (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    categoria_id INT NOT NULL,
+    categoria_id INT NOT NULL UNIQUE,
     limite_mensal DECIMAL(10,2) NOT NULL,
-    mes_referencia CHAR(7) NOT NULL,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
-

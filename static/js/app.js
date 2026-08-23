@@ -2,8 +2,8 @@ const API_BASE = '';
 
 let tipoSelecionado = 'entrada';
 
-const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho',
-               'agosto','setembro','outubro','novembro','dezembro'];
+const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho',
+               'Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 function formatarMoeda(valor) {
   return `R$ ${Number(valor).toFixed(2).replace('.', ',')}`;
@@ -17,7 +17,7 @@ function formatarData(dataISO) {
 function definirPeriodoAtual() {
   const hoje = new Date();
   document.getElementById('periodo-atual').textContent =
-    `${meses[hoje.getMonth()]} de ${hoje.getFullYear()} — Atualizações em tempo real`;
+    `${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 }
 
 //dashboard
@@ -61,7 +61,7 @@ async function carregarCategoriasFiltro() {
   });
 }
 
-//transações 
+//transações
 
 function corComOpacidade(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -115,7 +115,7 @@ async function carregarTransacoes() {
   renderizarTransacoes(data.transacoes);
 }
 
-//form novas transações
+//forms nova transações
 
 function configurarToggleTipo() {
   const botoes = document.querySelectorAll('.tipo-btn');
@@ -170,13 +170,15 @@ function configurarTrocaDeView() {
       const view = btn.dataset.view;
       document.getElementById('view-dashboard').style.display = view === 'dashboard' ? '' : 'none';
       document.getElementById('view-categorias').style.display = view === 'categorias' ? '' : 'none';
+      document.getElementById('view-limites').style.display = view === 'limites' ? '' : 'none';
 
       if (view === 'categorias') carregarListaCategorias();
+      if (view === 'limites') carregarListaLimites();
     });
   });
 }
 
-//crud 
+//crud
 
 let tipoCategoriaSelecionado = 'entrada';
 
@@ -257,6 +259,95 @@ function configurarFormCategoria() {
   });
 }
 
+//limites por categoria
+
+async function carregarSelectLimite() {
+  const res = await fetch(`${API_BASE}/api/categorias?tipo=saida`);
+  const categorias = await res.json();
+
+  const select = document.getElementById('categoria-limite');
+  select.innerHTML = '<option value="">Selecionar categoria…</option>';
+  categorias.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    opt.textContent = cat.nome;
+    select.appendChild(opt);
+  });
+}
+
+function classeBarraLimite(percentual) {
+  if (percentual === null) return 'barra-neutra';
+  if (percentual >= 100) return 'barra-estourada';
+  if (percentual >= 80) return 'barra-alerta';
+  return 'barra-ok';
+}
+
+async function carregarListaLimites() {
+  const res = await fetch(`${API_BASE}/api/limites`);
+  const data = await res.json();
+  const lista = document.getElementById('lista-limites');
+
+  if (data.limites.length === 0) {
+    lista.innerHTML = '<p class="lista-vazia">Nenhuma categoria de saída cadastrada ainda.</p>';
+    return;
+  }
+
+  lista.innerHTML = data.limites.map(l => {
+    const semLimite = l.limite_mensal === null;
+    const percentual = l.percentual !== null ? Math.min(l.percentual, 100) : 0;
+
+    return `
+      <div class="limite-row">
+        <div class="limite-topo">
+          <span class="tx-desc">${l.categoria_nome}</span>
+          <span class="limite-valores">
+            ${formatarMoeda(l.gasto_atual)} ${semLimite ? '' : `/ ${formatarMoeda(l.limite_mensal)}`}
+          </span>
+        </div>
+        ${semLimite
+          ? '<p class="limite-sem-valor">Nenhum limite definido ainda</p>'
+          : `<div class="barra-fundo"><div class="barra-preenchida ${classeBarraLimite(l.percentual)}" style="width:${percentual}%"></div></div>
+             <p class="limite-percentual">${l.percentual}% do limite usado</p>`
+        }
+      </div>
+    `;
+  }).join('');
+}
+
+function configurarFormLimite() {
+  document.getElementById('form-limite').addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    const erroEl = document.getElementById('form-erro-limite');
+    erroEl.textContent = '';
+
+    const payload = {
+      categoria_id: document.getElementById('categoria-limite').value,
+      limite_mensal: parseFloat(document.getElementById('valor-limite').value)
+    };
+
+    if (!payload.categoria_id) {
+      erroEl.textContent = 'Selecione uma categoria.';
+      return;
+    }
+
+    const res = await fetch(`${API_BASE}/api/limites`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const erro = await res.json();
+      erroEl.textContent = erro.erro || 'Não foi possível salvar o limite.';
+      return;
+    }
+
+    document.getElementById('form-limite').reset();
+    carregarListaLimites();
+  });
+}
+
+
 document.addEventListener('DOMContentLoaded', async () => {
   definirPeriodoAtual();
   document.getElementById('data-transacao').valueAsDate = new Date();
@@ -270,6 +361,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   configurarTrocaDeView();
   configurarFormCategoria();
+  configurarFormLimite();
+  carregarSelectLimite();
 
   await Promise.all([
     carregarDashboard(),

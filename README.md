@@ -2,6 +2,11 @@
 
 Sistema web para controle de finanças pessoais, desenvolvido com Python e Flask, que permite registrar e organizar entradas e saídas financeiras, associar transações a categorias, criar novas categorias, excluir informações e visualizar um dashboard com o resumo financeiro, facilitando o acompanhamento das movimentações.
 
+<p align="center">
+  <img src="static/images/finance1.png" width="500px" alt="Print do projeto">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="static/images/finance2.png" width="500px" alt="Print do projeto">
+</p>
+
 ## Tecnologias
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)

@@ -2,7 +2,7 @@
 
 Sistema web para controle de finanças pessoais, desenvolvido com Python e Flask, que permite registrar e organizar entradas e saídas financeiras, associar transações a categorias, criar novas categorias, excluir informações e visualizar um dashboard com o resumo financeiro, facilitando o acompanhamento das movimentações.
 
-<p align="center">
+<p align="left">
   <img src="static/images/finance1.png" width="500px" alt="Print do projeto">
 </p>
 
@@ -22,7 +22,7 @@ Sistema web para controle de finanças pessoais, desenvolvido com Python e Flask
 
 ```bash
 git clone https://github.com/seu-usuario/financemanager.git
-cd expense-control
+cd financemanager
 ```
 
 ### 2. Crie e ative o ambiente virtual

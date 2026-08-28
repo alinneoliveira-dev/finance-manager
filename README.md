@@ -1,9 +1,10 @@
 # Finance Manager
 
-Sistema web para controle de finanças pessoais, desenvolvido com Python e Flask, que permite registrar e organizar entradas e saídas financeiras, associar transações a categorias, criar novas categorias, excluir informações e visualizar um dashboard com o resumo financeiro, facilitando o acompanhamento das movimentações.
+Sistema web de controle de finanças pessoais desenvolvido com Python e Flask, projetado para facilitar o acompanhamento das movimentações financeiras. O projeto permite gerenciar entradas e saídas, organizar transações por categorias com limites mensais, visualizar um dashboard com o resumo do saldo e contar com a praticidade de um bot do Telegram para lançar despesas de onde estiver.
 
 <p align="left">
-  <img src="static/images/finance1.png" width="500px" alt="Print do projeto">
+  <img src="static/images/finance1.png" width="640px" alt="Print do Sistema">
+  <img src="static/images/telegram_bot.png" width="405px" alt="Print do Telegram">
 </p>
 
 ## Tecnologias
@@ -57,7 +58,7 @@ mysql -u root -p < schema.sql
 
 ### 5. Configure as variáveis de ambiente
 
-Copie `.env.example` para `.env` e configure as credenciais do seu banco MySQL.
+Copie `.env.example` para `.env` e preencha com as suas credenciais do MySQL e o token do seu bot do Telegram:
 
 ### 6. Execute a aplicação
 

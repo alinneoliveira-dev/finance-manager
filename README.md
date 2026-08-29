@@ -2,9 +2,10 @@
 
 Sistema web de controle de finanças pessoais desenvolvido com Python e Flask, projetado para facilitar o acompanhamento das movimentações financeiras. O projeto permite gerenciar entradas e saídas, organizar transações por categorias com limites mensais, visualizar um dashboard com o resumo do saldo e contar com a praticidade de um bot do Telegram para lançar despesas de onde estiver.
 
-<p align="left">
-  <img src="static/images/finance1.png" width="100px" alt="Print do Sistema">
-  <img src="static/images/telegram_bot.png" width="250px" alt="Print do Telegram">
+<p align="center">
+  <img src="static/images/finance1.png" width="400" alt="Print do Sistema">
+  &nbsp;&nbsp;
+  <img src="static/images/telegram_bot.png" width="260" alt="Print do Telegram">
 </p>
 
 ## Tecnologias

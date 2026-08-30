@@ -8,7 +8,7 @@ from db import db, Categoria, Despesa
 
 api_bot_bp = Blueprint("api_bot", __name__, url_prefix="/api")
 
-API_KEY = os.environ.get("BOT_API_KEY", "troque-esta-chave")
+API_KEY = os.environ.get("BOT_API_KEY", "chave")
 
 
 def exigir_api_key(func):

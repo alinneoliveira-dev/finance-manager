@@ -59,7 +59,7 @@ mysql -u root -p < schema.sql
 
 ### 5. Configure as variáveis de ambiente
 
-Copie `.env.example` para `.env` e preencha com as suas credenciais do MySQL e o token do seu bot do Telegram:
+Copie `.env.example` para `.env` e preencha com as suas credenciais do MySQL e o token do seu bot do Telegram.
 
 ### 6. Execute a aplicação
 
